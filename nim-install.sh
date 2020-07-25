@@ -1,59 +1,51 @@
 #!/bin/bash
 #
-# Below installs Nim from source to ensure the latest version is used.
-# Set the version of the Nim source code file to download below -
-# check Nim download age here:  https://nim-lang.org/install_unix.html
+# Below installs the Nim 'Linux x64 bit' offical binary bundle only!
 #
-NIMVER=nim-1.2.0
+# Script is also used with GitHib actions for building and testing Nim
+# applications.
+#
+# using Nim official binary built archive:
+#   https://nim-lang.org/download/nim-1.2.4-linux_x64.tar.xz
+#
+# change below to match the required Nim download version wanted:
+NIMVER=nim-1.2.4
 #
 if [ ! -f $HOME/.nimble/bin/nim ]; then
     # ensure Ubuntu base dev C compiler is installed and OpenSSL dependency:
     printf "\nInstalling: build-essential and openssl to build Nim"
-    sudo apt -y install build-essential openssl
+    sudo apt -y install build-essential openssl git curl
     # now start Nim install process...
-    printf "\nAdding Nim 'stable' version '%s' from: 'https://nim-lang.org/download/' ...\n\n" "$NIMVER"
+    printf "\nAdding Nim 'stable' binary version '%s' from: 'https://nim-lang.org/download/' ...\n\n" "$NIMVER"
+    #
+    # Add the install location for Nim, Nimble, and tools in:  ~/.nimble
     if [ ! -d $HOME/.nimble ]; then
-        printf "Creating directory ~/.nimble...\n"
+        printf "Creating Nim install directory '~/.nimble'...\n"
         mkdir $HOME/.nimble
     fi
-    # used for Nim build area
+    # used for Nim unpack and prep area
     if [ ! -d $HOME/scratch ]; then
         printf "Creating directory ~/scratch...\n"
         mkdir $HOME/scratch
     fi
     cd $HOME/scratch
-    # download source code - unless already exists...
-    if [ ! -f $NIMVER.tar.xz ]; then
+    # download Nim binary build archive - unless already exists...
+    if [ ! -f $NIMVER-linux_x64.tar.xz ]; then
         printf "Downloading Nim version: '%s'...\n" "$NIMVER"
-        curl https://nim-lang.org/download/$NIMVER.tar.xz -O
+        curl -OL https://nim-lang.org/download/$NIMVER-linux_x64.tar.xz
     else
-        printf "Existing Nim dowload file found: '%s'\n" "$NIMVER.tar.xz"
+        printf "Existing Nim dowload file found: '%s'\n" "$NIMVER-linux_x64.tar.xz"
     fi
     # if not unarchived yet... do it
-    if [ ! -d $NIMVER ] && [ -f $NIMVER.tar.xz ]; then
-        tar -xJvf $NIMVER.tar.xz
+    if [ ! -d $NIMVER ] && [ -f $NIMVER-linux_x64.tar.xz ]; then
+        tar -xJvf $NIMVER-linux_x64.tar.xz
     fi
-    printf "Nim source unpacked... starting build of compiler and tools...\n"
+    printf "Nim pre-compiled archive unpacked... starting install of compiler and tools...\n"
     cd $NIMVER
-    ./build.sh
-    printf "\n\nMAIN C SOURCE BUILD COMPLETED!!\n\n"
-    printf "Now build and installing Nim development environment to: '~/.nimble'\n\n"
-    printf "Building (with the nim compiler) the Nim 'koch' tool...\n"
-    bin/nim c koch
-    printf "Building (with the nim compiler) the Nim 'tools'...\n"
-    ./koch tools
-    printf "Building (with the nim compiler) the 'nimble' tool...\n"
-    ./koch nimble
     printf "Running the official installer script for Nim...\n"
     # install everything into: $HOME/.nimble
     sh ./install.sh $HOME/.nimble
     cp ./bin/* $HOME/.nimble/nim/bin/
-    # add addtional tools to support Nim usage
-    #printf "Installing supporting tools for Nim...\n"
-    #mkdir -p $HOME/.nimble/tools
-    #if [ -f ./tools/nim.bash-completion ]; then
-    #    cp ./tools/nim.bash-completion $HOME/.nimble/tools
-    #fi
     # add path update if Nim is installed
     if [ -d $HOME/.nimble/nim/bin ]; then
         PATH="${PATH}":$HOME/.nimble/nim/bin:$HOME/.nimble/bin
@@ -66,6 +58,8 @@ if [ ! -f $HOME/.nimble/bin/nim ]; then
     if [ -f $HOME/.nimble/nim/bin/nimble ] && [ -f $HOME/.nimble/bin/nimble ]; then
         mv $HOME/.nimble/nim/bin/nimble $HOME/.nimble/nim/bin/nimble-orig
     fi
+    # safety flush all cached files to system...
+    sync
     #
     printf "\nDONE\n"
 else
