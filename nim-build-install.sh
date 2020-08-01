@@ -7,7 +7,7 @@
 # Script is also used with GitHib actions for building and testing Nim
 # applications.
 # 
-NIMVER=nim-1.2.0
+NIMVER=nim-1.2.6
 #
 if [ ! -f $HOME/.nimble/bin/nim ]; then
     # ensure Ubuntu base dev C compiler is installed and OpenSSL dependency:
