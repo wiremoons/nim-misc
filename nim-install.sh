@@ -6,10 +6,11 @@
 # applications.
 #
 # using Nim official binary built archive:
-#   https://nim-lang.org/download/nim-1.2.4-linux_x64.tar.xz
+#   https://nim-lang.org/download/nim-1.2.4-linux_x64.tar.xz <- used pre 2021-03-26
+#   https://nim-lang.org/download/nim-1.4.4-linux_x64.tar.xz
 #
 # change below to match the required Nim download version wanted:
-NIMVER=nim-1.2.6
+NIMVER=nim-1.4.4
 #
 if [ ! -f $HOME/.nimble/bin/nim ]; then
     # ensure Ubuntu base dev C compiler is installed and OpenSSL dependency:
