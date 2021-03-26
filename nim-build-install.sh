@@ -6,8 +6,8 @@
 #
 # Script is also used with GitHib actions for building and testing Nim
 # applications.
-# 
-NIMVER=nim-1.2.6
+#
+NIMVER=nim-1.4.4
 #
 if [ ! -f $HOME/.nimble/bin/nim ]; then
     # ensure Ubuntu base dev C compiler is installed and OpenSSL dependency:
@@ -43,6 +43,8 @@ if [ ! -f $HOME/.nimble/bin/nim ]; then
     printf "Now build and installing Nim development environment to: '~/.nimble'\n\n"
     printf "Building (with the nim compiler) the Nim 'koch' tool...\n"
     bin/nim c koch
+    printf "Building 'boot' with '-d:release'...\n"
+    ./koch boot -d:release
     printf "Building (with the nim compiler) the Nim 'tools'...\n"
     ./koch tools
     printf "Building (with the nim compiler) the 'nimble' tool...\n"
