@@ -10,7 +10,7 @@
 #   https://nim-lang.org/download/nim-1.4.4-linux_x64.tar.xz
 #
 # change below to match the required Nim download version wanted:
-NIMVER=nim-1.4.8
+NIMVER=nim-1.6.12
 #
 if [ ! -f $HOME/.nimble/bin/nim ]; then
     # ensure Ubuntu base dev C compiler is installed and OpenSSL dependency:
